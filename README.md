@@ -1,5 +1,5 @@
 # WTFIWWM
-What the fuck is wrong with me?
+What the f*ck is wrong with me?
 
 This is an example STM32F103C8T6 (AKA 'blue pill') project that should setup a UART that gets triggered over the IRQ to do something.
 
