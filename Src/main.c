@@ -31,6 +31,8 @@ int main(void)
     if (HAL_UART_Receive_IT(&UartHandle, (uint8_t *)aRxBuffer, RXBUFFERSIZE) != HAL_OK) {
         Error_Handler();
     }
+    // tests... turn the LED off and send a string... THESE WORK!!
+    toggleLED();
     sprintf(buffbuff, "This is me testing...\r\n>>>\r\n");
     HAL_UART_Transmit(&UartHandle, (uint8_t*)buffbuff, 90, 1000);
     while (1) { // main loop
@@ -55,7 +57,9 @@ int main(void)
   */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle)
 {
-    UartReady = SET;
+    if (UartHandle->Instance == USART1)	{
+        UartReady = SET;
+    }
 }
 
 // there's a line in main.h that links error_handler to this...
