@@ -1,4 +1,4 @@
-ARM GAS  /tmp/cczj00CX.s 			page 1
+ARM GAS  /tmp/cc4F2IIo.s 			page 1
 
 
    1              		.cpu cortex-m3
@@ -24,87 +24,229 @@ ARM GAS  /tmp/cczj00CX.s 			page 1
   22              	MX_GPIO_Init:
   23              	.LFB67:
   24              		.file 1 "Src/main.c"
-   1:Src/main.c    **** #include "stm32f1xx_hal.h"
-   2:Src/main.c    **** #include "stm32f1xx_it.h"
-   3:Src/main.c    **** #include "stm32f1xx_hal_gpio.h"
-   4:Src/main.c    **** #include "stm32f1xx_hal_usart.h"
-   5:Src/main.c    **** #include <string.h>
-   6:Src/main.c    **** #include <stdio.h>
-   7:Src/main.c    **** 
-   8:Src/main.c    **** // Prrrrrototypes
-   9:Src/main.c    **** void SystemClock_Config(void);
-  10:Src/main.c    **** static void MX_GPIO_Init(void);
-  11:Src/main.c    **** static void MX_USART1_UART_Init(void);
-  12:Src/main.c    **** void toggleLED(void);
-  13:Src/main.c    **** 
-  14:Src/main.c    **** UART_HandleTypeDef UartHandle;      
-  15:Src/main.c    **** __IO ITStatus UartReady = RESET;    
-  16:Src/main.c    **** 
-  17:Src/main.c    **** #define RXBUFFERSIZE    10
-  18:Src/main.c    **** uint8_t aRxBuffer[RXBUFFERSIZE];    
-  19:Src/main.c    **** 
-  20:Src/main.c    **** char buffbuff[100];
-  21:Src/main.c    **** int main(void)
-  22:Src/main.c    **** {
-  23:Src/main.c    ****     //Inits
-  24:Src/main.c    ****     HAL_Init();
-  25:Src/main.c    ****     SystemClock_Config();
-  26:Src/main.c    ****     MX_GPIO_Init();
-  27:Src/main.c    ****     MX_USART1_UART_Init();
-  28:Src/main.c    ****     // this? well, why the f*ck not...
-  29:Src/main.c    ****     HAL_UART_MspInit(&UartHandle);
-  30:Src/main.c    ****     // error check the UART...
-  31:Src/main.c    ****     if (HAL_UART_Receive_IT(&UartHandle, (uint8_t *)aRxBuffer, RXBUFFERSIZE) != HAL_OK) {
-  32:Src/main.c    ****         Error_Handler();
-  33:Src/main.c    ****     }
-  34:Src/main.c    ****     // tests... turn the LED off and send a string... THESE WORK!!
-ARM GAS  /tmp/cczj00CX.s 			page 2
+   1:Src/main.c    **** /**
+   2:Src/main.c    ****   ******************************************************************************
+   3:Src/main.c    ****   * File Name          : main.c
+   4:Src/main.c    ****   * Description        : Main program body
+   5:Src/main.c    ****   ******************************************************************************
+   6:Src/main.c    ****   ** This notice applies to any and all portions of this file
+   7:Src/main.c    ****   * that are not between comment pairs USER CODE BEGIN and
+   8:Src/main.c    ****   * USER CODE END. Other portions of this file, whether 
+   9:Src/main.c    ****   * inserted by the user or by software development tools
+  10:Src/main.c    ****   * are owned by their respective copyright owners.
+  11:Src/main.c    ****   *
+  12:Src/main.c    ****   * COPYRIGHT(c) 2017 STMicroelectronics
+  13:Src/main.c    ****   *
+  14:Src/main.c    ****   * Redistribution and use in source and binary forms, with or without modification,
+  15:Src/main.c    ****   * are permitted provided that the following conditions are met:
+  16:Src/main.c    ****   *   1. Redistributions of source code must retain the above copyright notice,
+  17:Src/main.c    ****   *      this list of conditions and the following disclaimer.
+  18:Src/main.c    ****   *   2. Redistributions in binary form must reproduce the above copyright notice,
+  19:Src/main.c    ****   *      this list of conditions and the following disclaimer in the documentation
+  20:Src/main.c    ****   *      and/or other materials provided with the distribution.
+  21:Src/main.c    ****   *   3. Neither the name of STMicroelectronics nor the names of its contributors
+  22:Src/main.c    ****   *      may be used to endorse or promote products derived from this software
+  23:Src/main.c    ****   *      without specific prior written permission.
+  24:Src/main.c    ****   *
+  25:Src/main.c    ****   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  26:Src/main.c    ****   * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  27:Src/main.c    ****   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  28:Src/main.c    ****   * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+  29:Src/main.c    ****   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+  30:Src/main.c    ****   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+  31:Src/main.c    ****   * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+  32:Src/main.c    ****   * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+  33:Src/main.c    ****   * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  34:Src/main.c    ****   * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ARM GAS  /tmp/cc4F2IIo.s 			page 2
 
 
-  35:Src/main.c    ****     toggleLED();
-  36:Src/main.c    ****     sprintf(buffbuff, "This is me testing...\r\n>>>\r\n");
-  37:Src/main.c    ****     HAL_UART_Transmit(&UartHandle, (uint8_t*)buffbuff, 90, 1000);
-  38:Src/main.c    ****     while (1) { // main loop
-  39:Src/main.c    ****         if (UartReady != SET) {
-  40:Src/main.c    ****             /* do shit all...*/
-  41:Src/main.c    ****         }
-  42:Src/main.c    ****         else {
-  43:Src/main.c    ****             /* UART 상태 리셋 */
-  44:Src/main.c    ****             UartReady = RESET;
-  45:Src/main.c    ****             sprintf(buffbuff, "Keypress!");
-  46:Src/main.c    ****             HAL_UART_Transmit(&UartHandle, (uint8_t*)buffbuff, 90, 1000);
-  47:Src/main.c    ****         }
-  48:Src/main.c    ****     }
+  35:Src/main.c    ****   *
+  36:Src/main.c    ****   ******************************************************************************
+  37:Src/main.c    ****   */
+  38:Src/main.c    **** /* Includes ------------------------------------------------------------------*/
+  39:Src/main.c    **** #include "main.h"
+  40:Src/main.c    **** #include "stm32f1xx_hal.h"
+  41:Src/main.c    **** #include <string.h>
+  42:Src/main.c    **** 
+  43:Src/main.c    **** /* USER CODE BEGIN Includes */
+  44:Src/main.c    **** 
+  45:Src/main.c    **** /* USER CODE END Includes */
+  46:Src/main.c    **** 
+  47:Src/main.c    **** /* Private variables ---------------------------------------------------------*/
+  48:Src/main.c    **** UART_HandleTypeDef huart1;
   49:Src/main.c    **** 
-  50:Src/main.c    **** }
-  51:Src/main.c    **** 
+  50:Src/main.c    **** /* USER CODE BEGIN PV */
+  51:Src/main.c    **** /* Private variables ---------------------------------------------------------*/
   52:Src/main.c    **** 
-  53:Src/main.c    **** /**
-  54:Src/main.c    ****   * @brief  Rx Transfer completed callback
-  55:Src/main.c    ****   * @param  UartHandle: UART handle
-  56:Src/main.c    ****   * @retval None
-  57:Src/main.c    ****   */
-  58:Src/main.c    **** void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle)
-  59:Src/main.c    **** {
-  60:Src/main.c    ****     if (UartHandle->Instance == USART1)	{
-  61:Src/main.c    ****         UartReady = SET;
-  62:Src/main.c    ****     }
-  63:Src/main.c    **** }
+  53:Src/main.c    **** /* USER CODE END PV */
+  54:Src/main.c    **** 
+  55:Src/main.c    **** /* Private function prototypes -----------------------------------------------*/
+  56:Src/main.c    **** void SystemClock_Config(void);
+  57:Src/main.c    **** static void MX_GPIO_Init(void);
+  58:Src/main.c    **** static void MX_USART1_UART_Init(void);
+  59:Src/main.c    **** 
+  60:Src/main.c    **** UART_HandleTypeDef UartHandle;      
+  61:Src/main.c    **** __IO ITStatus UartReady = RESET;   
+  62:Src/main.c    **** char commBuff[50];
+  63:Src/main.c    **** char action[50]; 
   64:Src/main.c    **** 
-  65:Src/main.c    **** // there's a line in main.h that links error_handler to this...
-  66:Src/main.c    **** void _Error_Handler(char * file, int line)
-  67:Src/main.c    **** {
-  68:Src/main.c    ****   /* USER CODE BEGIN Error_Handler_Debug */
-  69:Src/main.c    ****   /* User can add his own implementation to report the HAL error return state */
-  70:Src/main.c    ****   uint8_t *errBuf[100];
-  71:Src/main.c    ****   sprintf(buffbuff, "[!] oops... something went wrong!");
-  72:Src/main.c    ****       HAL_UART_Transmit(&UartHandle, (uint8_t*)errBuf, 35, 1000);
-  73:Src/main.c    ****   /* USER CODE END Error_Handler_Debug */ 
-  74:Src/main.c    **** }
-  75:Src/main.c    **** 
-  76:Src/main.c    **** static void MX_GPIO_Init(void)
-  77:Src/main.c    **** {
-  25              		.loc 1 77 0
+  65:Src/main.c    **** #define RXBUFFERSIZE    10
+  66:Src/main.c    **** uint8_t aRxBuffer[RXBUFFERSIZE];    
+  67:Src/main.c    **** 
+  68:Src/main.c    **** char buffbuff[100];
+  69:Src/main.c    **** uint8_t bufferRx[5];
+  70:Src/main.c    **** char prompt[5] = "\r\n>>>";
+  71:Src/main.c    **** int commBuff_index=0;
+  72:Src/main.c    **** 
+  73:Src/main.c    **** 
+  74:Src/main.c    **** /* USER CODE BEGIN PFP */
+  75:Src/main.c    **** /* Private function prototypes -----------------------------------------------*/
+  76:Src/main.c    **** 
+  77:Src/main.c    **** /* USER CODE END PFP */
+  78:Src/main.c    **** 
+  79:Src/main.c    **** /* USER CODE BEGIN 0 */
+  80:Src/main.c    **** 
+  81:Src/main.c    **** /* USER CODE END 0 */
+  82:Src/main.c    **** 
+  83:Src/main.c    **** int main(void)
+  84:Src/main.c    **** {
+  85:Src/main.c    **** 
+  86:Src/main.c    ****   /* USER CODE BEGIN 1 */
+  87:Src/main.c    **** 
+  88:Src/main.c    ****   /* USER CODE END 1 */
+  89:Src/main.c    **** 
+  90:Src/main.c    ****   /* MCU Configuration----------------------------------------------------------*/
+  91:Src/main.c    **** 
+ARM GAS  /tmp/cc4F2IIo.s 			page 3
+
+
+  92:Src/main.c    ****   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+  93:Src/main.c    ****   HAL_Init();
+  94:Src/main.c    **** 
+  95:Src/main.c    ****   /* USER CODE BEGIN Init */
+  96:Src/main.c    **** 
+  97:Src/main.c    ****   /* USER CODE END Init */
+  98:Src/main.c    **** 
+  99:Src/main.c    ****   /* Configure the system clock */
+ 100:Src/main.c    ****   SystemClock_Config();
+ 101:Src/main.c    **** 
+ 102:Src/main.c    ****   /* USER CODE BEGIN SysInit */
+ 103:Src/main.c    **** 
+ 104:Src/main.c    ****   /* USER CODE END SysInit */
+ 105:Src/main.c    **** 
+ 106:Src/main.c    ****   /* Initialize all configured peripherals */
+ 107:Src/main.c    ****   MX_GPIO_Init();
+ 108:Src/main.c    ****   MX_USART1_UART_Init();
+ 109:Src/main.c    **** 
+ 110:Src/main.c    ****   /* USER CODE BEGIN 2 */
+ 111:Src/main.c    ****    __HAL_UART_ENABLE_IT(&huart1, UART_IT_RXNE); // flag receive
+ 112:Src/main.c    ****    __HAL_UART_ENABLE_IT(&huart1, UART_IT_TC); // flat Tx_IT
+ 113:Src/main.c    ****   /* USER CODE END 2 */
+ 114:Src/main.c    **** 
+ 115:Src/main.c    ****   /* Infinite loop */
+ 116:Src/main.c    ****   /* USER CODE BEGIN WHILE */
+ 117:Src/main.c    ****   sprintf(buffbuff, "This is me testing...\r\n>>>");
+ 118:Src/main.c    ****   HAL_UART_Transmit_IT(&huart1, (uint8_t*)buffbuff, 90);
+ 119:Src/main.c    ****   while (1)
+ 120:Src/main.c    ****   {// main loop
+ 121:Src/main.c    ****     HAL_UART_Receive_IT(&huart1, bufferRx, 5);
+ 122:Src/main.c    ****     if (UartReady != SET) {
+ 123:Src/main.c    ****         /* do shit all...*/
+ 124:Src/main.c    ****         continue;
+ 125:Src/main.c    ****     }
+ 126:Src/main.c    ****     else {
+ 127:Src/main.c    ****         UartReady = RESET;
+ 128:Src/main.c    ****         sprintf(action, "\r\nComm: %s", commBuff);
+ 129:Src/main.c    ****         HAL_UART_Transmit(&huart1, (uint8_t*)action, 60, 100);
+ 130:Src/main.c    ****         HAL_UART_Transmit_IT(&huart1, (uint8_t*)prompt, 5);
+ 131:Src/main.c    ****     }
+ 132:Src/main.c    **** 
+ 133:Src/main.c    ****   }
+ 134:Src/main.c    ****   /* USER CODE END 3 */
+ 135:Src/main.c    **** 
+ 136:Src/main.c    **** }
+ 137:Src/main.c    **** 
+ 138:Src/main.c    **** /** System Clock Configuration
+ 139:Src/main.c    **** */
+ 140:Src/main.c    **** void SystemClock_Config(void)
+ 141:Src/main.c    **** {
+ 142:Src/main.c    **** 
+ 143:Src/main.c    ****   RCC_OscInitTypeDef RCC_OscInitStruct;
+ 144:Src/main.c    ****   RCC_ClkInitTypeDef RCC_ClkInitStruct;
+ 145:Src/main.c    **** 
+ 146:Src/main.c    ****     /**Initializes the CPU, AHB and APB busses clocks 
+ 147:Src/main.c    ****     */
+ 148:Src/main.c    ****   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+ARM GAS  /tmp/cc4F2IIo.s 			page 4
+
+
+ 149:Src/main.c    ****   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+ 150:Src/main.c    ****   RCC_OscInitStruct.HSICalibrationValue = 16;
+ 151:Src/main.c    ****   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
+ 152:Src/main.c    ****   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+ 153:Src/main.c    ****   {
+ 154:Src/main.c    ****     _Error_Handler(__FILE__, __LINE__);
+ 155:Src/main.c    ****   }
+ 156:Src/main.c    **** 
+ 157:Src/main.c    ****     /**Initializes the CPU, AHB and APB busses clocks 
+ 158:Src/main.c    ****     */
+ 159:Src/main.c    ****   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+ 160:Src/main.c    ****                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+ 161:Src/main.c    ****   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
+ 162:Src/main.c    ****   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+ 163:Src/main.c    ****   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+ 164:Src/main.c    ****   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+ 165:Src/main.c    **** 
+ 166:Src/main.c    ****   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
+ 167:Src/main.c    ****   {
+ 168:Src/main.c    ****     _Error_Handler(__FILE__, __LINE__);
+ 169:Src/main.c    ****   }
+ 170:Src/main.c    **** 
+ 171:Src/main.c    ****     /**Configure the Systick interrupt time 
+ 172:Src/main.c    ****     */
+ 173:Src/main.c    ****   HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000);
+ 174:Src/main.c    **** 
+ 175:Src/main.c    ****     /**Configure the Systick 
+ 176:Src/main.c    ****     */
+ 177:Src/main.c    ****   HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
+ 178:Src/main.c    **** 
+ 179:Src/main.c    ****   /* SysTick_IRQn interrupt configuration */
+ 180:Src/main.c    ****   HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
+ 181:Src/main.c    **** }
+ 182:Src/main.c    **** 
+ 183:Src/main.c    **** /* USART1 init function */
+ 184:Src/main.c    **** static void MX_USART1_UART_Init(void)
+ 185:Src/main.c    **** {
+ 186:Src/main.c    **** 
+ 187:Src/main.c    ****   huart1.Instance = USART1;
+ 188:Src/main.c    ****   huart1.Init.BaudRate = 115200;
+ 189:Src/main.c    ****   huart1.Init.WordLength = UART_WORDLENGTH_8B;
+ 190:Src/main.c    ****   huart1.Init.StopBits = UART_STOPBITS_1;
+ 191:Src/main.c    ****   huart1.Init.Parity = UART_PARITY_NONE;
+ 192:Src/main.c    ****   huart1.Init.Mode = UART_MODE_TX_RX;
+ 193:Src/main.c    ****   huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+ 194:Src/main.c    ****   huart1.Init.OverSampling = UART_OVERSAMPLING_16;
+ 195:Src/main.c    ****   if (HAL_UART_Init(&huart1) != HAL_OK)
+ 196:Src/main.c    ****   {
+ 197:Src/main.c    ****     _Error_Handler(__FILE__, __LINE__);
+ 198:Src/main.c    ****   }
+ 199:Src/main.c    **** 
+ 200:Src/main.c    **** }
+ 201:Src/main.c    **** 
+ 202:Src/main.c    **** /** Configure pins as 
+ 203:Src/main.c    ****         * Analog 
+ 204:Src/main.c    ****         * Input 
+ 205:Src/main.c    ****         * Output
+ARM GAS  /tmp/cc4F2IIo.s 			page 5
+
+
+ 206:Src/main.c    ****         * EVENT_OUT
+ 207:Src/main.c    ****         * EXTI
+ 208:Src/main.c    **** */
+ 209:Src/main.c    **** static void MX_GPIO_Init(void)
+ 210:Src/main.c    **** {
+  25              		.loc 1 210 0
   26              		.cfi_startproc
   27              		@ args = 0, pretend = 0, frame = 24
   28              		@ frame_needed = 0, uses_anonymous_args = 0
@@ -117,15 +259,12 @@ ARM GAS  /tmp/cczj00CX.s 			page 1
   35              	.LCFI1:
   36              		.cfi_def_cfa_offset 32
   37              	.LBB2:
-  78:Src/main.c    **** 
-ARM GAS  /tmp/cczj00CX.s 			page 3
-
-
-  79:Src/main.c    ****   GPIO_InitTypeDef GPIO_InitStruct;
-  80:Src/main.c    **** 
-  81:Src/main.c    ****   /* GPIO Ports Clock Enable */
-  82:Src/main.c    ****   __HAL_RCC_GPIOC_CLK_ENABLE();
-  38              		.loc 1 82 0
+ 211:Src/main.c    **** 
+ 212:Src/main.c    ****   GPIO_InitTypeDef GPIO_InitStruct;
+ 213:Src/main.c    **** 
+ 214:Src/main.c    ****   /* GPIO Ports Clock Enable */
+ 215:Src/main.c    ****   __HAL_RCC_GPIOC_CLK_ENABLE();
+  38              		.loc 1 215 0
   39 0004 134B     		ldr	r3, .L3
   40 0006 9A69     		ldr	r2, [r3, #24]
   41 0008 42F01002 		orr	r2, r2, #16
@@ -136,8 +275,8 @@ ARM GAS  /tmp/cczj00CX.s 			page 1
   46 0016 009A     		ldr	r2, [sp]
   47              	.LBE2:
   48              	.LBB3:
-  83:Src/main.c    ****   __HAL_RCC_GPIOA_CLK_ENABLE();
-  49              		.loc 1 83 0
+ 216:Src/main.c    ****   __HAL_RCC_GPIOA_CLK_ENABLE();
+  49              		.loc 1 216 0
   50 0018 9A69     		ldr	r2, [r3, #24]
   51 001a 42F00402 		orr	r2, r2, #4
   52 001e 9A61     		str	r2, [r3, #24]
@@ -146,42 +285,42 @@ ARM GAS  /tmp/cczj00CX.s 			page 1
   55 0026 0193     		str	r3, [sp, #4]
   56 0028 019B     		ldr	r3, [sp, #4]
   57              	.LBE3:
-  84:Src/main.c    **** 
-  85:Src/main.c    ****   /*Configure GPIO pin Output Level */
-  86:Src/main.c    ****   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
-  58              		.loc 1 86 0
+ 217:Src/main.c    **** 
+ 218:Src/main.c    ****   /*Configure GPIO pin Output Level */
+ 219:Src/main.c    ****   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
+  58              		.loc 1 219 0
   59 002a 0B4C     		ldr	r4, .L3+4
   60 002c 0022     		movs	r2, #0
   61 002e 4FF40051 		mov	r1, #8192
   62 0032 2046     		mov	r0, r4
   63 0034 FFF7FEFF 		bl	HAL_GPIO_WritePin
   64              	.LVL0:
-  87:Src/main.c    **** 
-  88:Src/main.c    ****   /*Configure GPIO pin : PC13 */
-  89:Src/main.c    ****   GPIO_InitStruct.Pin = GPIO_PIN_13;
-  65              		.loc 1 89 0
+ 220:Src/main.c    **** 
+ 221:Src/main.c    ****   /*Configure GPIO pin : PC13 */
+ 222:Src/main.c    ****   GPIO_InitStruct.Pin = GPIO_PIN_13;
+ARM GAS  /tmp/cc4F2IIo.s 			page 6
+
+
+  65              		.loc 1 222 0
   66 0038 4FF40053 		mov	r3, #8192
   67 003c 0293     		str	r3, [sp, #8]
-  90:Src/main.c    ****   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  68              		.loc 1 90 0
+ 223:Src/main.c    ****   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  68              		.loc 1 223 0
   69 003e 0123     		movs	r3, #1
   70 0040 0393     		str	r3, [sp, #12]
-  91:Src/main.c    ****   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  71              		.loc 1 91 0
+ 224:Src/main.c    ****   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  71              		.loc 1 224 0
   72 0042 0223     		movs	r3, #2
   73 0044 0593     		str	r3, [sp, #20]
-  92:Src/main.c    ****   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-  74              		.loc 1 92 0
+ 225:Src/main.c    ****   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+  74              		.loc 1 225 0
   75 0046 02A9     		add	r1, sp, #8
   76 0048 2046     		mov	r0, r4
   77 004a FFF7FEFF 		bl	HAL_GPIO_Init
   78              	.LVL1:
-  93:Src/main.c    **** 
-  94:Src/main.c    **** }
-ARM GAS  /tmp/cczj00CX.s 			page 4
-
-
-  79              		.loc 1 94 0
+ 226:Src/main.c    **** 
+ 227:Src/main.c    **** }
+  79              		.loc 1 227 0
   80 004e 06B0     		add	sp, sp, #24
   81              	.LCFI2:
   82              		.cfi_def_cfa_offset 8
@@ -194,641 +333,662 @@ ARM GAS  /tmp/cczj00CX.s 			page 1
   89 0058 00100140 		.word	1073811456
   90              		.cfi_endproc
   91              	.LFE67:
-  93              		.section	.text.HAL_UART_RxCpltCallback,"ax",%progbits
+  93              		.section	.text._Error_Handler,"ax",%progbits
   94              		.align	1
-  95              		.global	HAL_UART_RxCpltCallback
+  95              		.global	_Error_Handler
   96              		.syntax unified
   97              		.thumb
   98              		.thumb_func
   99              		.fpu softvfp
- 101              	HAL_UART_RxCpltCallback:
- 102              	.LFB65:
-  59:Src/main.c    ****     if (UartHandle->Instance == USART1)	{
- 103              		.loc 1 59 0
+ 101              	_Error_Handler:
+ 102              	.LFB68:
+ 228:Src/main.c    **** 
+ 229:Src/main.c    **** /* USER CODE BEGIN 4 */
+ 230:Src/main.c    **** 
+ 231:Src/main.c    **** /* USER CODE END 4 */
+ 232:Src/main.c    **** 
+ 233:Src/main.c    **** /**
+ 234:Src/main.c    ****   * @brief  This function is executed in case of error occurrence.
+ 235:Src/main.c    ****   * @param  None
+ 236:Src/main.c    ****   * @retval None
+ 237:Src/main.c    ****   */
+ 238:Src/main.c    **** void _Error_Handler(char * file, int line)
+ 239:Src/main.c    **** {
+ 103              		.loc 1 239 0
  104              		.cfi_startproc
- 105              		@ args = 0, pretend = 0, frame = 0
- 106              		@ frame_needed = 0, uses_anonymous_args = 0
- 107              		@ link register save eliminated.
+ 105              		@ Volatile: function does not return.
+ 106              		@ args = 0, pretend = 0, frame = 400
+ARM GAS  /tmp/cc4F2IIo.s 			page 7
+
+
+ 107              		@ frame_needed = 0, uses_anonymous_args = 0
  108              	.LVL2:
-  60:Src/main.c    ****         UartReady = SET;
- 109              		.loc 1 60 0
- 110 0000 0268     		ldr	r2, [r0]
- 111 0002 044B     		ldr	r3, .L8
- 112 0004 9A42     		cmp	r2, r3
- 113 0006 00D0     		beq	.L7
- 114              	.L5:
- 115 0008 7047     		bx	lr
- 116              	.L7:
-  61:Src/main.c    ****     }
- 117              		.loc 1 61 0
- 118 000a 0122     		movs	r2, #1
- 119 000c 024B     		ldr	r3, .L8+4
- 120 000e 1A70     		strb	r2, [r3]
-  63:Src/main.c    **** 
- 121              		.loc 1 63 0
- 122 0010 FAE7     		b	.L5
- 123              	.L9:
- 124 0012 00BF     		.align	2
- 125              	.L8:
- 126 0014 00380140 		.word	1073821696
- 127 0018 00000000 		.word	.LANCHOR0
- 128              		.cfi_endproc
- 129              	.LFE65:
- 131              		.section	.text._Error_Handler,"ax",%progbits
- 132              		.align	1
- 133              		.global	_Error_Handler
- 134              		.syntax unified
-ARM GAS  /tmp/cczj00CX.s 			page 5
+ 109 0000 80B5     		push	{r7, lr}
+ 110              	.LCFI3:
+ 111              		.cfi_def_cfa_offset 8
+ 112              		.cfi_offset 7, -8
+ 113              		.cfi_offset 14, -4
+ 114 0002 E4B0     		sub	sp, sp, #400
+ 115              	.LCFI4:
+ 116              		.cfi_def_cfa_offset 408
+ 117              	.LVL3:
+ 118              	.L7:
+ 119              	.LBB4:
+ 240:Src/main.c    ****   /* USER CODE BEGIN Error_Handler_Debug */
+ 241:Src/main.c    ****   /* User can add his own implementation to report the HAL error return state */
+ 242:Src/main.c    ****   while(1) 
+ 243:Src/main.c    ****   {
+ 244:Src/main.c    ****       uint8_t *errBuf[100];
+ 245:Src/main.c    ****       sprintf(buffbuff, "[!] oops... something went wrong!");
+ 120              		.loc 1 245 0 discriminator 1
+ 121 0004 0B4E     		ldr	r6, .L9
+ 122 0006 0C4C     		ldr	r4, .L9+4
+ 123 0008 06F12007 		add	r7, r6, #32
+ 124              	.L6:
+ 125 000c 3546     		mov	r5, r6
+ 126 000e 0FCD     		ldmia	r5!, {r0, r1, r2, r3}
+ 127 0010 2060     		str	r0, [r4]	@ unaligned
+ 128 0012 6160     		str	r1, [r4, #4]	@ unaligned
+ 129 0014 A260     		str	r2, [r4, #8]	@ unaligned
+ 130 0016 E360     		str	r3, [r4, #12]	@ unaligned
+ 131 0018 2E46     		mov	r6, r5
+ 132 001a 1034     		adds	r4, r4, #16
+ 133 001c BD42     		cmp	r5, r7
+ 134 001e F5D1     		bne	.L6
+ 135 0020 2B88     		ldrh	r3, [r5]	@ unaligned
+ 136 0022 2380     		strh	r3, [r4]	@ unaligned
+ 246:Src/main.c    ****       HAL_UART_Transmit(&huart1, (uint8_t*)errBuf, 35, 1000);
+ 137              		.loc 1 246 0 discriminator 1
+ 138 0024 4FF47A73 		mov	r3, #1000
+ 139 0028 2322     		movs	r2, #35
+ 140 002a 6946     		mov	r1, sp
+ 141 002c 0348     		ldr	r0, .L9+8
+ 142 002e FFF7FEFF 		bl	HAL_UART_Transmit
+ 143              	.LVL4:
+ 144 0032 E7E7     		b	.L7
+ 145              	.L10:
+ 146              		.align	2
+ 147              	.L9:
+ 148 0034 00000000 		.word	.LC0
+ 149 0038 00000000 		.word	buffbuff
+ 150 003c 00000000 		.word	huart1
+ 151              	.LBE4:
+ 152              		.cfi_endproc
+ 153              	.LFE68:
+ 155              		.section	.text.MX_USART1_UART_Init,"ax",%progbits
+ 156              		.align	1
+ 157              		.syntax unified
+ARM GAS  /tmp/cc4F2IIo.s 			page 8
 
 
- 135              		.thumb
- 136              		.thumb_func
- 137              		.fpu softvfp
- 139              	_Error_Handler:
- 140              	.LFB66:
-  67:Src/main.c    ****   /* USER CODE BEGIN Error_Handler_Debug */
- 141              		.loc 1 67 0
- 142              		.cfi_startproc
- 143              		@ args = 0, pretend = 0, frame = 400
- 144              		@ frame_needed = 0, uses_anonymous_args = 0
- 145              	.LVL3:
- 146 0000 F0B5     		push	{r4, r5, r6, r7, lr}
- 147              	.LCFI3:
- 148              		.cfi_def_cfa_offset 20
- 149              		.cfi_offset 4, -20
- 150              		.cfi_offset 5, -16
- 151              		.cfi_offset 6, -12
- 152              		.cfi_offset 7, -8
- 153              		.cfi_offset 14, -4
- 154 0002 E5B0     		sub	sp, sp, #404
- 155              	.LCFI4:
- 156              		.cfi_def_cfa_offset 424
-  71:Src/main.c    ****       HAL_UART_Transmit(&UartHandle, (uint8_t*)errBuf, 35, 1000);
- 157              		.loc 1 71 0
- 158 0004 0C4E     		ldr	r6, .L13
- 159 0006 0D4C     		ldr	r4, .L13+4
- 160 0008 06F12007 		add	r7, r6, #32
- 161              	.LVL4:
- 162              	.L11:
- 163 000c 3546     		mov	r5, r6
- 164 000e 0FCD     		ldmia	r5!, {r0, r1, r2, r3}
- 165 0010 2060     		str	r0, [r4]	@ unaligned
- 166 0012 6160     		str	r1, [r4, #4]	@ unaligned
- 167 0014 A260     		str	r2, [r4, #8]	@ unaligned
- 168 0016 E360     		str	r3, [r4, #12]	@ unaligned
- 169 0018 2E46     		mov	r6, r5
- 170 001a 1034     		adds	r4, r4, #16
- 171 001c BD42     		cmp	r5, r7
- 172 001e F5D1     		bne	.L11
- 173 0020 2B88     		ldrh	r3, [r5]	@ unaligned
- 174 0022 2380     		strh	r3, [r4]	@ unaligned
-  72:Src/main.c    ****   /* USER CODE END Error_Handler_Debug */ 
- 175              		.loc 1 72 0
- 176 0024 4FF47A73 		mov	r3, #1000
- 177 0028 2322     		movs	r2, #35
- 178 002a 6946     		mov	r1, sp
- 179 002c 0448     		ldr	r0, .L13+8
- 180 002e FFF7FEFF 		bl	HAL_UART_Transmit
- 181              	.LVL5:
-  74:Src/main.c    **** 
- 182              		.loc 1 74 0
- 183 0032 65B0     		add	sp, sp, #404
- 184              	.LCFI5:
- 185              		.cfi_def_cfa_offset 20
- 186              		@ sp needed
- 187 0034 F0BD     		pop	{r4, r5, r6, r7, pc}
- 188              	.L14:
-ARM GAS  /tmp/cczj00CX.s 			page 6
+ 158              		.thumb
+ 159              		.thumb_func
+ 160              		.fpu softvfp
+ 162              	MX_USART1_UART_Init:
+ 163              	.LFB66:
+ 185:Src/main.c    **** 
+ 164              		.loc 1 185 0
+ 165              		.cfi_startproc
+ 166              		@ args = 0, pretend = 0, frame = 0
+ 167              		@ frame_needed = 0, uses_anonymous_args = 0
+ 168 0000 08B5     		push	{r3, lr}
+ 169              	.LCFI5:
+ 170              		.cfi_def_cfa_offset 8
+ 171              		.cfi_offset 3, -8
+ 172              		.cfi_offset 14, -4
+ 187:Src/main.c    ****   huart1.Init.BaudRate = 115200;
+ 173              		.loc 1 187 0
+ 174 0002 0B48     		ldr	r0, .L15
+ 175 0004 0B4B     		ldr	r3, .L15+4
+ 176 0006 0360     		str	r3, [r0]
+ 188:Src/main.c    ****   huart1.Init.WordLength = UART_WORDLENGTH_8B;
+ 177              		.loc 1 188 0
+ 178 0008 4FF4E133 		mov	r3, #115200
+ 179 000c 4360     		str	r3, [r0, #4]
+ 189:Src/main.c    ****   huart1.Init.StopBits = UART_STOPBITS_1;
+ 180              		.loc 1 189 0
+ 181 000e 0023     		movs	r3, #0
+ 182 0010 8360     		str	r3, [r0, #8]
+ 190:Src/main.c    ****   huart1.Init.Parity = UART_PARITY_NONE;
+ 183              		.loc 1 190 0
+ 184 0012 C360     		str	r3, [r0, #12]
+ 191:Src/main.c    ****   huart1.Init.Mode = UART_MODE_TX_RX;
+ 185              		.loc 1 191 0
+ 186 0014 0361     		str	r3, [r0, #16]
+ 192:Src/main.c    ****   huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+ 187              		.loc 1 192 0
+ 188 0016 0C22     		movs	r2, #12
+ 189 0018 4261     		str	r2, [r0, #20]
+ 193:Src/main.c    ****   huart1.Init.OverSampling = UART_OVERSAMPLING_16;
+ 190              		.loc 1 193 0
+ 191 001a 8361     		str	r3, [r0, #24]
+ 194:Src/main.c    ****   if (HAL_UART_Init(&huart1) != HAL_OK)
+ 192              		.loc 1 194 0
+ 193 001c C361     		str	r3, [r0, #28]
+ 195:Src/main.c    ****   {
+ 194              		.loc 1 195 0
+ 195 001e FFF7FEFF 		bl	HAL_UART_Init
+ 196              	.LVL5:
+ 197 0022 00B9     		cbnz	r0, .L14
+ 198 0024 08BD     		pop	{r3, pc}
+ 199              	.L14:
+ 197:Src/main.c    ****   }
+ 200              		.loc 1 197 0
+ 201 0026 C521     		movs	r1, #197
+ 202 0028 0348     		ldr	r0, .L15+8
+ 203 002a FFF7FEFF 		bl	_Error_Handler
+ 204              	.LVL6:
+ARM GAS  /tmp/cc4F2IIo.s 			page 9
 
 
- 189 0036 00BF     		.align	2
- 190              	.L13:
- 191 0038 00000000 		.word	.LC0
- 192 003c 00000000 		.word	buffbuff
- 193 0040 00000000 		.word	UartHandle
- 194              		.cfi_endproc
- 195              	.LFE66:
- 197              		.section	.text.MX_USART1_UART_Init,"ax",%progbits
- 198              		.align	1
- 199              		.syntax unified
- 200              		.thumb
- 201              		.thumb_func
- 202              		.fpu softvfp
- 204              	MX_USART1_UART_Init:
- 205              	.LFB69:
-  95:Src/main.c    **** 
-  96:Src/main.c    **** void SystemClock_Config(void)
-  97:Src/main.c    **** {
-  98:Src/main.c    **** 
-  99:Src/main.c    ****   RCC_OscInitTypeDef RCC_OscInitStruct;
- 100:Src/main.c    ****   RCC_ClkInitTypeDef RCC_ClkInitStruct;
- 101:Src/main.c    **** 
- 102:Src/main.c    ****     /**Initializes the CPU, AHB and APB busses clocks 
- 103:Src/main.c    ****     */
- 104:Src/main.c    ****   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
- 105:Src/main.c    ****   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
- 106:Src/main.c    ****   RCC_OscInitStruct.HSICalibrationValue = 16;
- 107:Src/main.c    ****   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
- 108:Src/main.c    ****   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
- 109:Src/main.c    ****   {
- 110:Src/main.c    ****     _Error_Handler(__FILE__, __LINE__);
- 111:Src/main.c    ****   }
- 112:Src/main.c    **** 
- 113:Src/main.c    ****     /**Initializes the CPU, AHB and APB busses clocks 
- 114:Src/main.c    ****     */
- 115:Src/main.c    ****   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
- 116:Src/main.c    ****                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
- 117:Src/main.c    ****   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
- 118:Src/main.c    ****   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
- 119:Src/main.c    ****   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
- 120:Src/main.c    ****   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
- 121:Src/main.c    **** 
- 122:Src/main.c    ****   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
- 123:Src/main.c    ****   {
- 124:Src/main.c    ****     _Error_Handler(__FILE__, __LINE__);
- 125:Src/main.c    ****   }
- 126:Src/main.c    **** 
- 127:Src/main.c    ****     /**Configure the Systick interrupt time 
- 128:Src/main.c    ****     */
- 129:Src/main.c    ****   HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000);
- 130:Src/main.c    **** 
- 131:Src/main.c    ****     /**Configure the Systick 
- 132:Src/main.c    ****     */
- 133:Src/main.c    ****   HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
- 134:Src/main.c    **** 
- 135:Src/main.c    ****   /* SysTick_IRQn interrupt configuration */
- 136:Src/main.c    ****   HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
-ARM GAS  /tmp/cczj00CX.s 			page 7
-
-
- 137:Src/main.c    **** }
- 138:Src/main.c    **** 
- 139:Src/main.c    **** static void MX_USART1_UART_Init(void)
- 140:Src/main.c    **** {
- 206              		.loc 1 140 0
- 207              		.cfi_startproc
- 208              		@ args = 0, pretend = 0, frame = 0
- 209              		@ frame_needed = 0, uses_anonymous_args = 0
- 210 0000 08B5     		push	{r3, lr}
- 211              	.LCFI6:
- 212              		.cfi_def_cfa_offset 8
- 213              		.cfi_offset 3, -8
- 214              		.cfi_offset 14, -4
+ 205              	.L16:
+ 206 002e 00BF     		.align	2
+ 207              	.L15:
+ 208 0030 00000000 		.word	huart1
+ 209 0034 00380140 		.word	1073821696
+ 210 0038 00000000 		.word	.LC1
+ 211              		.cfi_endproc
+ 212              	.LFE66:
+ 214              		.section	.text.SystemClock_Config,"ax",%progbits
+ 215              		.align	1
+ 216              		.global	SystemClock_Config
+ 217              		.syntax unified
+ 218              		.thumb
+ 219              		.thumb_func
+ 220              		.fpu softvfp
+ 222              	SystemClock_Config:
+ 223              	.LFB65:
  141:Src/main.c    **** 
- 142:Src/main.c    ****   UartHandle.Instance = USART1;
- 215              		.loc 1 142 0
- 216 0002 0B48     		ldr	r0, .L19
- 217 0004 0B4B     		ldr	r3, .L19+4
- 218 0006 0360     		str	r3, [r0]
- 143:Src/main.c    ****   UartHandle.Init.BaudRate = 115200;
- 219              		.loc 1 143 0
- 220 0008 4FF4E133 		mov	r3, #115200
- 221 000c 4360     		str	r3, [r0, #4]
- 144:Src/main.c    ****   UartHandle.Init.WordLength = UART_WORDLENGTH_8B;
- 222              		.loc 1 144 0
- 223 000e 0023     		movs	r3, #0
- 224 0010 8360     		str	r3, [r0, #8]
- 145:Src/main.c    ****   UartHandle.Init.StopBits = UART_STOPBITS_1;
- 225              		.loc 1 145 0
- 226 0012 C360     		str	r3, [r0, #12]
- 146:Src/main.c    ****   UartHandle.Init.Parity = UART_PARITY_NONE;
- 227              		.loc 1 146 0
- 228 0014 0361     		str	r3, [r0, #16]
- 147:Src/main.c    ****   UartHandle.Init.Mode = UART_MODE_TX_RX;
- 229              		.loc 1 147 0
- 230 0016 0C22     		movs	r2, #12
- 231 0018 4261     		str	r2, [r0, #20]
- 148:Src/main.c    ****   UartHandle.Init.HwFlowCtl = UART_HWCONTROL_NONE;
- 232              		.loc 1 148 0
- 233 001a 8361     		str	r3, [r0, #24]
- 149:Src/main.c    ****   UartHandle.Init.OverSampling = UART_OVERSAMPLING_16;
- 234              		.loc 1 149 0
- 235 001c C361     		str	r3, [r0, #28]
- 150:Src/main.c    ****   if (HAL_UART_Init(&UartHandle) != HAL_OK)
- 236              		.loc 1 150 0
- 237 001e FFF7FEFF 		bl	HAL_UART_Init
- 238              	.LVL6:
- 239 0022 00B9     		cbnz	r0, .L18
- 240              	.L15:
- 241 0024 08BD     		pop	{r3, pc}
- 242              	.L18:
- 151:Src/main.c    ****   {
- 152:Src/main.c    ****     _Error_Handler(__FILE__, __LINE__);
- 243              		.loc 1 152 0
- 244 0026 9821     		movs	r1, #152
- 245 0028 0348     		ldr	r0, .L19+8
- 246 002a FFF7FEFF 		bl	_Error_Handler
-ARM GAS  /tmp/cczj00CX.s 			page 8
+ 224              		.loc 1 141 0
+ 225              		.cfi_startproc
+ 226              		@ args = 0, pretend = 0, frame = 64
+ 227              		@ frame_needed = 0, uses_anonymous_args = 0
+ 228 0000 00B5     		push	{lr}
+ 229              	.LCFI6:
+ 230              		.cfi_def_cfa_offset 4
+ 231              		.cfi_offset 14, -4
+ 232 0002 91B0     		sub	sp, sp, #68
+ 233              	.LCFI7:
+ 234              		.cfi_def_cfa_offset 72
+ 148:Src/main.c    ****   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+ 235              		.loc 1 148 0
+ 236 0004 0223     		movs	r3, #2
+ 237 0006 0693     		str	r3, [sp, #24]
+ 149:Src/main.c    ****   RCC_OscInitStruct.HSICalibrationValue = 16;
+ 238              		.loc 1 149 0
+ 239 0008 0123     		movs	r3, #1
+ 240 000a 0A93     		str	r3, [sp, #40]
+ 150:Src/main.c    ****   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
+ 241              		.loc 1 150 0
+ 242 000c 1023     		movs	r3, #16
+ 243 000e 0B93     		str	r3, [sp, #44]
+ 151:Src/main.c    ****   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+ 244              		.loc 1 151 0
+ 245 0010 0023     		movs	r3, #0
+ 246 0012 0D93     		str	r3, [sp, #52]
+ 152:Src/main.c    ****   {
+ 247              		.loc 1 152 0
+ 248 0014 06A8     		add	r0, sp, #24
+ 249 0016 FFF7FEFF 		bl	HAL_RCC_OscConfig
+ 250              	.LVL7:
+ 251 001a F0B9     		cbnz	r0, .L21
+ 159:Src/main.c    ****                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+ 252              		.loc 1 159 0
+ 253 001c 0F23     		movs	r3, #15
+ 254 001e 0193     		str	r3, [sp, #4]
+ 161:Src/main.c    ****   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+ 255              		.loc 1 161 0
+ARM GAS  /tmp/cc4F2IIo.s 			page 10
 
 
- 247              	.LVL7:
- 153:Src/main.c    ****   }
- 154:Src/main.c    **** 
- 155:Src/main.c    **** }
- 248              		.loc 1 155 0
- 249 002e F9E7     		b	.L15
- 250              	.L20:
- 251              		.align	2
- 252              	.L19:
- 253 0030 00000000 		.word	UartHandle
- 254 0034 00380140 		.word	1073821696
- 255 0038 00000000 		.word	.LC1
- 256              		.cfi_endproc
- 257              	.LFE69:
- 259              		.section	.text.SystemClock_Config,"ax",%progbits
- 260              		.align	1
- 261              		.global	SystemClock_Config
- 262              		.syntax unified
- 263              		.thumb
- 264              		.thumb_func
- 265              		.fpu softvfp
- 267              	SystemClock_Config:
- 268              	.LFB68:
-  97:Src/main.c    **** 
- 269              		.loc 1 97 0
- 270              		.cfi_startproc
- 271              		@ args = 0, pretend = 0, frame = 64
- 272              		@ frame_needed = 0, uses_anonymous_args = 0
- 273 0000 00B5     		push	{lr}
- 274              	.LCFI7:
- 275              		.cfi_def_cfa_offset 4
- 276              		.cfi_offset 14, -4
- 277 0002 91B0     		sub	sp, sp, #68
- 278              	.LCFI8:
- 279              		.cfi_def_cfa_offset 72
- 104:Src/main.c    ****   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
- 280              		.loc 1 104 0
- 281 0004 0223     		movs	r3, #2
- 282 0006 0693     		str	r3, [sp, #24]
- 105:Src/main.c    ****   RCC_OscInitStruct.HSICalibrationValue = 16;
- 283              		.loc 1 105 0
- 284 0008 0123     		movs	r3, #1
- 285 000a 0A93     		str	r3, [sp, #40]
- 106:Src/main.c    ****   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
- 286              		.loc 1 106 0
- 287 000c 1023     		movs	r3, #16
- 288 000e 0B93     		str	r3, [sp, #44]
- 107:Src/main.c    ****   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
- 289              		.loc 1 107 0
- 290 0010 0023     		movs	r3, #0
- 291 0012 0D93     		str	r3, [sp, #52]
- 108:Src/main.c    ****   {
- 292              		.loc 1 108 0
- 293 0014 06A8     		add	r0, sp, #24
- 294 0016 FFF7FEFF 		bl	HAL_RCC_OscConfig
- 295              	.LVL8:
- 296 001a F0B9     		cbnz	r0, .L25
-ARM GAS  /tmp/cczj00CX.s 			page 9
+ 256 0020 0021     		movs	r1, #0
+ 257 0022 0291     		str	r1, [sp, #8]
+ 162:Src/main.c    ****   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+ 258              		.loc 1 162 0
+ 259 0024 0391     		str	r1, [sp, #12]
+ 163:Src/main.c    ****   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+ 260              		.loc 1 163 0
+ 261 0026 0491     		str	r1, [sp, #16]
+ 164:Src/main.c    **** 
+ 262              		.loc 1 164 0
+ 263 0028 0591     		str	r1, [sp, #20]
+ 166:Src/main.c    ****   {
+ 264              		.loc 1 166 0
+ 265 002a 01A8     		add	r0, sp, #4
+ 266 002c FFF7FEFF 		bl	HAL_RCC_ClockConfig
+ 267              	.LVL8:
+ 268 0030 B8B9     		cbnz	r0, .L22
+ 173:Src/main.c    **** 
+ 269              		.loc 1 173 0
+ 270 0032 FFF7FEFF 		bl	HAL_RCC_GetHCLKFreq
+ 271              	.LVL9:
+ 272 0036 0D4B     		ldr	r3, .L23
+ 273 0038 A3FB0030 		umull	r3, r0, r3, r0
+ 274 003c 8009     		lsrs	r0, r0, #6
+ 275 003e FFF7FEFF 		bl	HAL_SYSTICK_Config
+ 276              	.LVL10:
+ 177:Src/main.c    **** 
+ 277              		.loc 1 177 0
+ 278 0042 0420     		movs	r0, #4
+ 279 0044 FFF7FEFF 		bl	HAL_SYSTICK_CLKSourceConfig
+ 280              	.LVL11:
+ 180:Src/main.c    **** }
+ 281              		.loc 1 180 0
+ 282 0048 0022     		movs	r2, #0
+ 283 004a 1146     		mov	r1, r2
+ 284 004c 4FF0FF30 		mov	r0, #-1
+ 285 0050 FFF7FEFF 		bl	HAL_NVIC_SetPriority
+ 286              	.LVL12:
+ 181:Src/main.c    **** 
+ 287              		.loc 1 181 0
+ 288 0054 11B0     		add	sp, sp, #68
+ 289              	.LCFI8:
+ 290              		.cfi_remember_state
+ 291              		.cfi_def_cfa_offset 4
+ 292              		@ sp needed
+ 293 0056 5DF804FB 		ldr	pc, [sp], #4
+ 294              	.L21:
+ 295              	.LCFI9:
+ 296              		.cfi_restore_state
+ 154:Src/main.c    ****   }
+ 297              		.loc 1 154 0
+ 298 005a 9A21     		movs	r1, #154
+ 299 005c 0448     		ldr	r0, .L23+4
+ 300 005e FFF7FEFF 		bl	_Error_Handler
+ 301              	.LVL13:
+ 302              	.L22:
+ 168:Src/main.c    ****   }
+ARM GAS  /tmp/cc4F2IIo.s 			page 11
 
 
- 297              	.L22:
- 115:Src/main.c    ****                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
- 298              		.loc 1 115 0
- 299 001c 0F23     		movs	r3, #15
- 300 001e 0193     		str	r3, [sp, #4]
- 117:Src/main.c    ****   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
- 301              		.loc 1 117 0
- 302 0020 0021     		movs	r1, #0
- 303 0022 0291     		str	r1, [sp, #8]
- 118:Src/main.c    ****   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
- 304              		.loc 1 118 0
- 305 0024 0391     		str	r1, [sp, #12]
- 119:Src/main.c    ****   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
- 306              		.loc 1 119 0
- 307 0026 0491     		str	r1, [sp, #16]
- 120:Src/main.c    **** 
- 308              		.loc 1 120 0
- 309 0028 0591     		str	r1, [sp, #20]
- 122:Src/main.c    ****   {
- 310              		.loc 1 122 0
- 311 002a 01A8     		add	r0, sp, #4
- 312 002c FFF7FEFF 		bl	HAL_RCC_ClockConfig
- 313              	.LVL9:
- 314 0030 C0B9     		cbnz	r0, .L26
- 315              	.L23:
- 129:Src/main.c    **** 
- 316              		.loc 1 129 0
- 317 0032 FFF7FEFF 		bl	HAL_RCC_GetHCLKFreq
- 318              	.LVL10:
- 319 0036 0E4B     		ldr	r3, .L27
- 320 0038 A3FB0030 		umull	r3, r0, r3, r0
- 321 003c 8009     		lsrs	r0, r0, #6
- 322 003e FFF7FEFF 		bl	HAL_SYSTICK_Config
- 323              	.LVL11:
- 133:Src/main.c    **** 
- 324              		.loc 1 133 0
- 325 0042 0420     		movs	r0, #4
- 326 0044 FFF7FEFF 		bl	HAL_SYSTICK_CLKSourceConfig
- 327              	.LVL12:
- 136:Src/main.c    **** }
- 328              		.loc 1 136 0
- 329 0048 0022     		movs	r2, #0
- 330 004a 1146     		mov	r1, r2
- 331 004c 4FF0FF30 		mov	r0, #-1
- 332 0050 FFF7FEFF 		bl	HAL_NVIC_SetPriority
- 333              	.LVL13:
- 137:Src/main.c    **** 
- 334              		.loc 1 137 0
- 335 0054 11B0     		add	sp, sp, #68
- 336              	.LCFI9:
- 337              		.cfi_remember_state
- 338              		.cfi_def_cfa_offset 4
- 339              		@ sp needed
- 340 0056 5DF804FB 		ldr	pc, [sp], #4
- 341              	.L25:
- 342              	.LCFI10:
- 343              		.cfi_restore_state
-ARM GAS  /tmp/cczj00CX.s 			page 10
+ 303              		.loc 1 168 0
+ 304 0062 A821     		movs	r1, #168
+ 305 0064 0248     		ldr	r0, .L23+4
+ 306 0066 FFF7FEFF 		bl	_Error_Handler
+ 307              	.LVL14:
+ 308              	.L24:
+ 309 006a 00BF     		.align	2
+ 310              	.L23:
+ 311 006c D34D6210 		.word	274877907
+ 312 0070 00000000 		.word	.LC1
+ 313              		.cfi_endproc
+ 314              	.LFE65:
+ 316              		.section	.text.main,"ax",%progbits
+ 317              		.align	1
+ 318              		.global	main
+ 319              		.syntax unified
+ 320              		.thumb
+ 321              		.thumb_func
+ 322              		.fpu softvfp
+ 324              	main:
+ 325              	.LFB64:
+  84:Src/main.c    **** 
+ 326              		.loc 1 84 0
+ 327              		.cfi_startproc
+ 328              		@ Volatile: function does not return.
+ 329              		@ args = 0, pretend = 0, frame = 0
+ 330              		@ frame_needed = 0, uses_anonymous_args = 0
+ 331 0000 08B5     		push	{r3, lr}
+ 332              	.LCFI10:
+ 333              		.cfi_def_cfa_offset 8
+ 334              		.cfi_offset 3, -8
+ 335              		.cfi_offset 14, -4
+  93:Src/main.c    **** 
+ 336              		.loc 1 93 0
+ 337 0002 FFF7FEFF 		bl	HAL_Init
+ 338              	.LVL15:
+ 100:Src/main.c    **** 
+ 339              		.loc 1 100 0
+ 340 0006 FFF7FEFF 		bl	SystemClock_Config
+ 341              	.LVL16:
+ 107:Src/main.c    ****   MX_USART1_UART_Init();
+ 342              		.loc 1 107 0
+ 343 000a FFF7FEFF 		bl	MX_GPIO_Init
+ 344              	.LVL17:
+ 108:Src/main.c    **** 
+ 345              		.loc 1 108 0
+ 346 000e FFF7FEFF 		bl	MX_USART1_UART_Init
+ 347              	.LVL18:
+ 111:Src/main.c    ****    __HAL_UART_ENABLE_IT(&huart1, UART_IT_TC); // flat Tx_IT
+ 348              		.loc 1 111 0
+ 349 0012 1E4E     		ldr	r6, .L29
+ 350 0014 3368     		ldr	r3, [r6]
+ 351 0016 DA68     		ldr	r2, [r3, #12]
+ 352 0018 42F02002 		orr	r2, r2, #32
+ 353 001c DA60     		str	r2, [r3, #12]
+ 112:Src/main.c    ****   /* USER CODE END 2 */
+ 354              		.loc 1 112 0
+ARM GAS  /tmp/cc4F2IIo.s 			page 12
 
 
- 110:Src/main.c    ****   }
- 344              		.loc 1 110 0
- 345 005a 6E21     		movs	r1, #110
- 346 005c 0548     		ldr	r0, .L27+4
- 347 005e FFF7FEFF 		bl	_Error_Handler
- 348              	.LVL14:
- 349 0062 DBE7     		b	.L22
- 350              	.L26:
- 124:Src/main.c    ****   }
- 351              		.loc 1 124 0
- 352 0064 7C21     		movs	r1, #124
- 353 0066 0348     		ldr	r0, .L27+4
- 354 0068 FFF7FEFF 		bl	_Error_Handler
- 355              	.LVL15:
- 356 006c E1E7     		b	.L23
- 357              	.L28:
- 358 006e 00BF     		.align	2
- 359              	.L27:
- 360 0070 D34D6210 		.word	274877907
- 361 0074 00000000 		.word	.LC1
- 362              		.cfi_endproc
- 363              	.LFE68:
- 365              		.section	.text.toggleLED,"ax",%progbits
- 366              		.align	1
- 367              		.global	toggleLED
- 368              		.syntax unified
- 369              		.thumb
- 370              		.thumb_func
- 371              		.fpu softvfp
- 373              	toggleLED:
- 374              	.LFB70:
- 156:Src/main.c    **** 
- 157:Src/main.c    **** // for when we get to using it...
- 158:Src/main.c    **** void toggleLED()
- 159:Src/main.c    **** {
- 375              		.loc 1 159 0
- 376              		.cfi_startproc
- 377              		@ args = 0, pretend = 0, frame = 0
- 378              		@ frame_needed = 0, uses_anonymous_args = 0
- 379 0000 08B5     		push	{r3, lr}
- 380              	.LCFI11:
- 381              		.cfi_def_cfa_offset 8
- 382              		.cfi_offset 3, -8
- 383              		.cfi_offset 14, -4
- 160:Src/main.c    ****     // this is basically just doing 
- 161:Src/main.c    ****     // GPIOC->ODR ^= GPIO_PIN_13;
- 162:Src/main.c    ****     // but who cares... HAL made it... bastards...
- 163:Src/main.c    ****     HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
- 384              		.loc 1 163 0
- 385 0002 4FF40051 		mov	r1, #8192
- 386 0006 0248     		ldr	r0, .L31
- 387 0008 FFF7FEFF 		bl	HAL_GPIO_TogglePin
- 388              	.LVL16:
- 389 000c 08BD     		pop	{r3, pc}
- 390              	.L32:
- 391 000e 00BF     		.align	2
- 392              	.L31:
-ARM GAS  /tmp/cczj00CX.s 			page 11
+ 355 001e DA68     		ldr	r2, [r3, #12]
+ 356 0020 42F04002 		orr	r2, r2, #64
+ 357 0024 DA60     		str	r2, [r3, #12]
+ 117:Src/main.c    ****   HAL_UART_Transmit_IT(&huart1, (uint8_t*)buffbuff, 90);
+ 358              		.loc 1 117 0
+ 359 0026 1A4D     		ldr	r5, .L29+4
+ 360 0028 1A4C     		ldr	r4, .L29+8
+ 361 002a 0FCC     		ldmia	r4!, {r0, r1, r2, r3}
+ 362 002c 2860     		str	r0, [r5]	@ unaligned
+ 363 002e 6960     		str	r1, [r5, #4]	@ unaligned
+ 364 0030 AA60     		str	r2, [r5, #8]	@ unaligned
+ 365 0032 EB60     		str	r3, [r5, #12]	@ unaligned
+ 366 0034 03CC     		ldmia	r4!, {r0, r1}
+ 367 0036 2861     		str	r0, [r5, #16]	@ unaligned
+ 368 0038 6961     		str	r1, [r5, #20]	@ unaligned
+ 369 003a 2288     		ldrh	r2, [r4]	@ unaligned
+ 370 003c A378     		ldrb	r3, [r4, #2]	@ zero_extendqisi2
+ 371 003e 2A83     		strh	r2, [r5, #24]	@ unaligned
+ 372 0040 AB76     		strb	r3, [r5, #26]
+ 118:Src/main.c    ****   while (1)
+ 373              		.loc 1 118 0
+ 374 0042 5A22     		movs	r2, #90
+ 375 0044 2946     		mov	r1, r5
+ 376 0046 3046     		mov	r0, r6
+ 377 0048 FFF7FEFF 		bl	HAL_UART_Transmit_IT
+ 378              	.LVL19:
+ 379              	.L26:
+ 121:Src/main.c    ****     if (UartReady != SET) {
+ 380              		.loc 1 121 0
+ 381 004c 0522     		movs	r2, #5
+ 382 004e 1249     		ldr	r1, .L29+12
+ 383 0050 0E48     		ldr	r0, .L29
+ 384 0052 FFF7FEFF 		bl	HAL_UART_Receive_IT
+ 385              	.LVL20:
+ 122:Src/main.c    ****         /* do shit all...*/
+ 386              		.loc 1 122 0
+ 387 0056 114B     		ldr	r3, .L29+16
+ 388 0058 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 389 005a DBB2     		uxtb	r3, r3
+ 390 005c 012B     		cmp	r3, #1
+ 391 005e F5D1     		bne	.L26
+ 127:Src/main.c    ****         sprintf(action, "\r\nComm: %s", commBuff);
+ 392              		.loc 1 127 0
+ 393 0060 0022     		movs	r2, #0
+ 394 0062 0E4B     		ldr	r3, .L29+16
+ 395 0064 1A70     		strb	r2, [r3]
+ 128:Src/main.c    ****         HAL_UART_Transmit(&huart1, (uint8_t*)action, 60, 100);
+ 396              		.loc 1 128 0
+ 397 0066 0E4D     		ldr	r5, .L29+20
+ 398 0068 0E4A     		ldr	r2, .L29+24
+ 399 006a 0F49     		ldr	r1, .L29+28
+ 400 006c 2846     		mov	r0, r5
+ 401 006e FFF7FEFF 		bl	sprintf
+ 402              	.LVL21:
+ 129:Src/main.c    ****         HAL_UART_Transmit_IT(&huart1, (uint8_t*)prompt, 5);
+ 403              		.loc 1 129 0
+ 404 0072 064C     		ldr	r4, .L29
+ARM GAS  /tmp/cc4F2IIo.s 			page 13
 
 
- 393 0010 00100140 		.word	1073811456
- 394              		.cfi_endproc
- 395              	.LFE70:
- 397              		.section	.text.main,"ax",%progbits
- 398              		.align	1
- 399              		.global	main
- 400              		.syntax unified
- 401              		.thumb
- 402              		.thumb_func
- 403              		.fpu softvfp
- 405              	main:
- 406              	.LFB64:
-  22:Src/main.c    ****     //Inits
- 407              		.loc 1 22 0
- 408              		.cfi_startproc
- 409              		@ Volatile: function does not return.
- 410              		@ args = 0, pretend = 0, frame = 0
- 411              		@ frame_needed = 0, uses_anonymous_args = 0
- 412 0000 08B5     		push	{r3, lr}
- 413              	.LCFI12:
- 414              		.cfi_def_cfa_offset 8
- 415              		.cfi_offset 3, -8
- 416              		.cfi_offset 14, -4
-  24:Src/main.c    ****     SystemClock_Config();
- 417              		.loc 1 24 0
- 418 0002 FFF7FEFF 		bl	HAL_Init
- 419              	.LVL17:
-  25:Src/main.c    ****     MX_GPIO_Init();
- 420              		.loc 1 25 0
- 421 0006 FFF7FEFF 		bl	SystemClock_Config
- 422              	.LVL18:
-  26:Src/main.c    ****     MX_USART1_UART_Init();
- 423              		.loc 1 26 0
- 424 000a FFF7FEFF 		bl	MX_GPIO_Init
- 425              	.LVL19:
-  27:Src/main.c    ****     // this? well, why the f*ck not...
- 426              		.loc 1 27 0
- 427 000e FFF7FEFF 		bl	MX_USART1_UART_Init
- 428              	.LVL20:
-  29:Src/main.c    ****     // error check the UART...
- 429              		.loc 1 29 0
- 430 0012 1D4C     		ldr	r4, .L38
- 431 0014 2046     		mov	r0, r4
- 432 0016 FFF7FEFF 		bl	HAL_UART_MspInit
- 433              	.LVL21:
-  31:Src/main.c    ****         Error_Handler();
- 434              		.loc 1 31 0
- 435 001a 0A22     		movs	r2, #10
- 436 001c 1B49     		ldr	r1, .L38+4
- 437 001e 2046     		mov	r0, r4
- 438 0020 FFF7FEFF 		bl	HAL_UART_Receive_IT
- 439              	.LVL22:
- 440 0024 18B1     		cbz	r0, .L34
-  32:Src/main.c    ****     }
- 441              		.loc 1 32 0
- 442 0026 2021     		movs	r1, #32
- 443 0028 1948     		ldr	r0, .L38+8
-ARM GAS  /tmp/cczj00CX.s 			page 12
+ 405 0074 6423     		movs	r3, #100
+ 406 0076 3C22     		movs	r2, #60
+ 407 0078 2946     		mov	r1, r5
+ 408 007a 2046     		mov	r0, r4
+ 409 007c FFF7FEFF 		bl	HAL_UART_Transmit
+ 410              	.LVL22:
+ 130:Src/main.c    ****     }
+ 411              		.loc 1 130 0
+ 412 0080 0522     		movs	r2, #5
+ 413 0082 0A49     		ldr	r1, .L29+32
+ 414 0084 2046     		mov	r0, r4
+ 415 0086 FFF7FEFF 		bl	HAL_UART_Transmit_IT
+ 416              	.LVL23:
+ 417 008a DFE7     		b	.L26
+ 418              	.L30:
+ 419              		.align	2
+ 420              	.L29:
+ 421 008c 00000000 		.word	huart1
+ 422 0090 00000000 		.word	buffbuff
+ 423 0094 00000000 		.word	.LC2
+ 424 0098 00000000 		.word	bufferRx
+ 425 009c 00000000 		.word	.LANCHOR0
+ 426 00a0 00000000 		.word	action
+ 427 00a4 00000000 		.word	commBuff
+ 428 00a8 1C000000 		.word	.LC3
+ 429 00ac 00000000 		.word	.LANCHOR1
+ 430              		.cfi_endproc
+ 431              	.LFE64:
+ 433              		.section	.text.USART1_IRQHandler,"ax",%progbits
+ 434              		.align	1
+ 435              		.global	USART1_IRQHandler
+ 436              		.syntax unified
+ 437              		.thumb
+ 438              		.thumb_func
+ 439              		.fpu softvfp
+ 441              	USART1_IRQHandler:
+ 442              	.LFB69:
+ 247:Src/main.c    ****   }
+ 248:Src/main.c    ****   /* USER CODE END Error_Handler_Debug */ 
+ 249:Src/main.c    **** }
+ 250:Src/main.c    **** // moved here...
+ 251:Src/main.c    **** void USART1_IRQHandler(void)
+ 252:Src/main.c    **** {
+ 443              		.loc 1 252 0
+ 444              		.cfi_startproc
+ 445              		@ args = 0, pretend = 0, frame = 0
+ 446              		@ frame_needed = 0, uses_anonymous_args = 0
+ 447 0000 38B5     		push	{r3, r4, r5, lr}
+ 448              	.LCFI11:
+ 449              		.cfi_def_cfa_offset 16
+ 450              		.cfi_offset 3, -16
+ 451              		.cfi_offset 4, -12
+ 452              		.cfi_offset 5, -8
+ 453              		.cfi_offset 14, -4
+ 253:Src/main.c    ****   // USER CODE BEGIN USART1_IRQn 0
+ 254:Src/main.c    **** 
+ 255:Src/main.c    ****   // USER CODE END USART1_IRQn 0
+ARM GAS  /tmp/cc4F2IIo.s 			page 14
 
 
- 444 002a FFF7FEFF 		bl	_Error_Handler
- 445              	.LVL23:
- 446              	.L34:
-  35:Src/main.c    ****     sprintf(buffbuff, "This is me testing...\r\n>>>\r\n");
- 447              		.loc 1 35 0
- 448 002e FFF7FEFF 		bl	toggleLED
- 449              	.LVL24:
-  36:Src/main.c    ****     HAL_UART_Transmit(&UartHandle, (uint8_t*)buffbuff, 90, 1000);
- 450              		.loc 1 36 0
- 451 0032 184D     		ldr	r5, .L38+12
- 452 0034 184C     		ldr	r4, .L38+16
- 453 0036 0FCC     		ldmia	r4!, {r0, r1, r2, r3}
- 454 0038 2860     		str	r0, [r5]	@ unaligned
- 455 003a 6960     		str	r1, [r5, #4]	@ unaligned
- 456 003c AA60     		str	r2, [r5, #8]	@ unaligned
- 457 003e EB60     		str	r3, [r5, #12]	@ unaligned
- 458 0040 07CC     		ldmia	r4!, {r0, r1, r2}
- 459 0042 2861     		str	r0, [r5, #16]	@ unaligned
- 460 0044 6961     		str	r1, [r5, #20]	@ unaligned
- 461 0046 AA61     		str	r2, [r5, #24]	@ unaligned
- 462 0048 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
- 463 004a 2B77     		strb	r3, [r5, #28]
-  37:Src/main.c    ****     while (1) { // main loop
- 464              		.loc 1 37 0
- 465 004c 4FF47A73 		mov	r3, #1000
- 466 0050 5A22     		movs	r2, #90
- 467 0052 2946     		mov	r1, r5
- 468 0054 0C48     		ldr	r0, .L38
- 469 0056 FFF7FEFF 		bl	HAL_UART_Transmit
- 470              	.LVL25:
- 471              	.L35:
-  39:Src/main.c    ****             /* do shit all...*/
- 472              		.loc 1 39 0
- 473 005a 104B     		ldr	r3, .L38+20
- 474 005c 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
- 475 005e DBB2     		uxtb	r3, r3
- 476 0060 012B     		cmp	r3, #1
- 477 0062 FAD1     		bne	.L35
-  44:Src/main.c    ****             sprintf(buffbuff, "Keypress!");
- 478              		.loc 1 44 0
- 479 0064 0022     		movs	r2, #0
- 480 0066 0D4B     		ldr	r3, .L38+20
- 481 0068 1A70     		strb	r2, [r3]
-  45:Src/main.c    ****             HAL_UART_Transmit(&UartHandle, (uint8_t*)buffbuff, 90, 1000);
- 482              		.loc 1 45 0
- 483 006a 0A4C     		ldr	r4, .L38+12
- 484 006c 0C4B     		ldr	r3, .L38+24
- 485 006e 03CB     		ldmia	r3!, {r0, r1}
- 486 0070 2060     		str	r0, [r4]	@ unaligned
- 487 0072 6160     		str	r1, [r4, #4]	@ unaligned
- 488 0074 1B88     		ldrh	r3, [r3]	@ unaligned
- 489 0076 2381     		strh	r3, [r4, #8]	@ unaligned
-  46:Src/main.c    ****         }
- 490              		.loc 1 46 0
- 491 0078 4FF47A73 		mov	r3, #1000
- 492 007c 5A22     		movs	r2, #90
- 493 007e 2146     		mov	r1, r4
-ARM GAS  /tmp/cczj00CX.s 			page 13
+ 256:Src/main.c    ****   HAL_UART_IRQHandler(&huart1);
+ 454              		.loc 1 256 0
+ 455 0002 164D     		ldr	r5, .L35
+ 456 0004 2846     		mov	r0, r5
+ 457 0006 FFF7FEFF 		bl	HAL_UART_IRQHandler
+ 458              	.LVL24:
+ 257:Src/main.c    ****   // USER CODE BEGIN USART1_IRQn 1 
+ 258:Src/main.c    ****   // get char from UART...
+ 259:Src/main.c    ****   HAL_UART_Receive_IT(&huart1, bufferRx, 1);
+ 459              		.loc 1 259 0
+ 460 000a 154C     		ldr	r4, .L35+4
+ 461 000c 0122     		movs	r2, #1
+ 462 000e 2146     		mov	r1, r4
+ 463 0010 2846     		mov	r0, r5
+ 464 0012 FFF7FEFF 		bl	HAL_UART_Receive_IT
+ 465              	.LVL25:
+ 260:Src/main.c    ****   // write the bytes to our Command buffer
+ 261:Src/main.c    ****   commBuff[commBuff_index] = bufferRx[0];
+ 466              		.loc 1 261 0
+ 467 0016 134B     		ldr	r3, .L35+8
+ 468 0018 1A68     		ldr	r2, [r3]
+ 469 001a 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 470 001c 1249     		ldr	r1, .L35+12
+ 471 001e 8B54     		strb	r3, [r1, r2]
+ 262:Src/main.c    ****   if (bufferRx[0] == '\r' || bufferRx[0] == '\n')
+ 472              		.loc 1 262 0
+ 473 0020 0D2B     		cmp	r3, #13
+ 474 0022 0CD0     		beq	.L32
+ 475              		.loc 1 262 0 is_stmt 0 discriminator 1
+ 476 0024 0A2B     		cmp	r3, #10
+ 477 0026 0AD0     		beq	.L32
+ 478              	.L33:
+ 263:Src/main.c    ****   {
+ 264:Src/main.c    ****       UartReady = SET;
+ 265:Src/main.c    ****       HAL_UART_Transmit(&huart1, (uint8_t*)commBuff, 50, 100);
+ 266:Src/main.c    ****       bufferRx[0] = '\0';
+ 267:Src/main.c    ****       commBuff_index = 0;
+ 268:Src/main.c    ****   }
+ 269:Src/main.c    ****   // use normal transmit (not transmit_IT) so we don't 
+ 270:Src/main.c    ****   // get duplicates in the buffer
+ 271:Src/main.c    ****   // TODO - stop using this dirty hack...
+ 272:Src/main.c    ****   HAL_UART_Transmit(&huart1, bufferRx, 5,100);
+ 479              		.loc 1 272 0 is_stmt 1
+ 480 0028 6423     		movs	r3, #100
+ 481 002a 0522     		movs	r2, #5
+ 482 002c 0C49     		ldr	r1, .L35+4
+ 483 002e 0B48     		ldr	r0, .L35
+ 484 0030 FFF7FEFF 		bl	HAL_UART_Transmit
+ 485              	.LVL26:
+ 273:Src/main.c    ****   commBuff_index++;
+ 486              		.loc 1 273 0
+ 487 0034 0B4A     		ldr	r2, .L35+8
+ 488 0036 1368     		ldr	r3, [r2]
+ 489 0038 0133     		adds	r3, r3, #1
+ 490 003a 1360     		str	r3, [r2]
+ 491 003c 38BD     		pop	{r3, r4, r5, pc}
+ 492              	.L32:
+ARM GAS  /tmp/cc4F2IIo.s 			page 15
 
 
- 494 0080 0148     		ldr	r0, .L38
- 495 0082 FFF7FEFF 		bl	HAL_UART_Transmit
- 496              	.LVL26:
- 497 0086 E8E7     		b	.L35
- 498              	.L39:
- 499              		.align	2
- 500              	.L38:
- 501 0088 00000000 		.word	UartHandle
- 502 008c 00000000 		.word	aRxBuffer
- 503 0090 00000000 		.word	.LC1
- 504 0094 00000000 		.word	buffbuff
- 505 0098 00000000 		.word	.LC2
- 506 009c 00000000 		.word	.LANCHOR0
- 507 00a0 20000000 		.word	.LC3
- 508              		.cfi_endproc
- 509              	.LFE64:
- 511              		.comm	buffbuff,100,4
- 512              		.comm	aRxBuffer,10,4
- 513              		.global	UartReady
- 514              		.comm	UartHandle,64,4
- 515              		.section	.bss.UartReady,"aw",%nobits
- 516              		.set	.LANCHOR0,. + 0
- 519              	UartReady:
- 520 0000 00       		.space	1
- 521              		.section	.rodata.MX_USART1_UART_Init.str1.4,"aMS",%progbits,1
- 522              		.align	2
- 523              	.LC1:
- 524 0000 5372632F 		.ascii	"Src/main.c\000"
- 524      6D61696E 
- 524      2E6300
- 525              		.section	.rodata._Error_Handler.str1.4,"aMS",%progbits,1
- 526              		.align	2
- 527              	.LC0:
- 528 0000 5B215D20 		.ascii	"[!] oops... something went wrong!\000"
- 528      6F6F7073 
- 528      2E2E2E20 
- 528      736F6D65 
- 528      7468696E 
- 529              		.section	.rodata.main.str1.4,"aMS",%progbits,1
- 530              		.align	2
- 531              	.LC2:
- 532 0000 54686973 		.ascii	"This is me testing...\015\012>>>\015\012\000"
- 532      20697320 
- 532      6D652074 
- 532      65737469 
- 532      6E672E2E 
- 533 001d 000000   		.space	3
- 534              	.LC3:
- 535 0020 4B657970 		.ascii	"Keypress!\000"
- 535      72657373 
- 535      2100
- 536              		.text
- 537              	.Letext0:
- 538              		.file 2 "/usr/arm-none-eabi/include/machine/_default_types.h"
- 539              		.file 3 "/usr/arm-none-eabi/include/sys/_stdint.h"
- 540              		.file 4 "Drivers/CMSIS/Include/core_cm3.h"
- 541              		.file 5 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/system_stm32f1xx.h"
-ARM GAS  /tmp/cczj00CX.s 			page 14
+ 264:Src/main.c    ****       HAL_UART_Transmit(&huart1, (uint8_t*)commBuff, 50, 100);
+ 493              		.loc 1 264 0
+ 494 003e 0122     		movs	r2, #1
+ 495 0040 0A4B     		ldr	r3, .L35+16
+ 496 0042 1A70     		strb	r2, [r3]
+ 265:Src/main.c    ****       bufferRx[0] = '\0';
+ 497              		.loc 1 265 0
+ 498 0044 6423     		movs	r3, #100
+ 499 0046 3222     		movs	r2, #50
+ 500 0048 0749     		ldr	r1, .L35+12
+ 501 004a 0448     		ldr	r0, .L35
+ 502 004c FFF7FEFF 		bl	HAL_UART_Transmit
+ 503              	.LVL27:
+ 266:Src/main.c    ****       commBuff_index = 0;
+ 504              		.loc 1 266 0
+ 505 0050 0023     		movs	r3, #0
+ 506 0052 034A     		ldr	r2, .L35+4
+ 507 0054 1370     		strb	r3, [r2]
+ 267:Src/main.c    ****   }
+ 508              		.loc 1 267 0
+ 509 0056 034A     		ldr	r2, .L35+8
+ 510 0058 1360     		str	r3, [r2]
+ 511 005a E5E7     		b	.L33
+ 512              	.L36:
+ 513              		.align	2
+ 514              	.L35:
+ 515 005c 00000000 		.word	huart1
+ 516 0060 00000000 		.word	bufferRx
+ 517 0064 00000000 		.word	.LANCHOR2
+ 518 0068 00000000 		.word	commBuff
+ 519 006c 00000000 		.word	.LANCHOR0
+ 520              		.cfi_endproc
+ 521              	.LFE69:
+ 523              		.global	commBuff_index
+ 524              		.global	prompt
+ 525              		.comm	bufferRx,5,4
+ 526              		.comm	buffbuff,100,4
+ 527              		.comm	aRxBuffer,10,4
+ 528              		.comm	action,50,4
+ 529              		.comm	commBuff,50,4
+ 530              		.global	UartReady
+ 531              		.comm	UartHandle,64,4
+ 532              		.comm	huart1,64,4
+ 533              		.section	.bss.UartReady,"aw",%nobits
+ 534              		.set	.LANCHOR0,. + 0
+ 537              	UartReady:
+ 538 0000 00       		.space	1
+ 539              		.section	.bss.commBuff_index,"aw",%nobits
+ 540              		.align	2
+ 541              		.set	.LANCHOR2,. + 0
+ 544              	commBuff_index:
+ 545 0000 00000000 		.space	4
+ 546              		.section	.data.prompt,"aw",%progbits
+ 547              		.align	2
+ 548              		.set	.LANCHOR1,. + 0
+ 551              	prompt:
+ 552 0000 0D0A3E3E 		.ascii	"\015\012>>>"
+ARM GAS  /tmp/cc4F2IIo.s 			page 16
 
 
- 542              		.file 6 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h"
- 543              		.file 7 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f1xx.h"
- 544              		.file 8 "/usr/arm-none-eabi/include/sys/lock.h"
- 545              		.file 9 "/usr/arm-none-eabi/include/sys/_types.h"
- 546              		.file 10 "/usr/lib/gcc/arm-none-eabi/6.2.0/include/stddef.h"
- 547              		.file 11 "/usr/arm-none-eabi/include/sys/reent.h"
- 548              		.file 12 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h"
- 549              		.file 13 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h"
- 550              		.file 14 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc_ex.h"
- 551              		.file 15 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio.h"
- 552              		.file 16 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_dma.h"
- 553              		.file 17 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h"
- 554              		.file 18 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_cortex.h"
- 555              		.file 19 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h"
-ARM GAS  /tmp/cczj00CX.s 			page 15
+ 552      3E
+ 553              		.section	.rodata.MX_USART1_UART_Init.str1.4,"aMS",%progbits,1
+ 554              		.align	2
+ 555              	.LC1:
+ 556 0000 5372632F 		.ascii	"Src/main.c\000"
+ 556      6D61696E 
+ 556      2E6300
+ 557              		.section	.rodata._Error_Handler.str1.4,"aMS",%progbits,1
+ 558              		.align	2
+ 559              	.LC0:
+ 560 0000 5B215D20 		.ascii	"[!] oops... something went wrong!\000"
+ 560      6F6F7073 
+ 560      2E2E2E20 
+ 560      736F6D65 
+ 560      7468696E 
+ 561              		.section	.rodata.main.str1.4,"aMS",%progbits,1
+ 562              		.align	2
+ 563              	.LC2:
+ 564 0000 54686973 		.ascii	"This is me testing...\015\012>>>\000"
+ 564      20697320 
+ 564      6D652074 
+ 564      65737469 
+ 564      6E672E2E 
+ 565 001b 00       		.space	1
+ 566              	.LC3:
+ 567 001c 0D0A436F 		.ascii	"\015\012Comm: %s\000"
+ 567      6D6D3A20 
+ 567      257300
+ 568              		.text
+ 569              	.Letext0:
+ 570              		.file 2 "/usr/arm-none-eabi/include/machine/_default_types.h"
+ 571              		.file 3 "/usr/arm-none-eabi/include/sys/_stdint.h"
+ 572              		.file 4 "Drivers/CMSIS/Include/core_cm3.h"
+ 573              		.file 5 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/system_stm32f1xx.h"
+ 574              		.file 6 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h"
+ 575              		.file 7 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f1xx.h"
+ 576              		.file 8 "/usr/arm-none-eabi/include/sys/lock.h"
+ 577              		.file 9 "/usr/arm-none-eabi/include/sys/_types.h"
+ 578              		.file 10 "/usr/lib/gcc/arm-none-eabi/6.2.0/include/stddef.h"
+ 579              		.file 11 "/usr/arm-none-eabi/include/sys/reent.h"
+ 580              		.file 12 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h"
+ 581              		.file 13 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h"
+ 582              		.file 14 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc_ex.h"
+ 583              		.file 15 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio.h"
+ 584              		.file 16 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_dma.h"
+ 585              		.file 17 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h"
+ 586              		.file 18 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_cortex.h"
+ 587              		.file 19 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h"
+ 588              		.file 20 "/usr/arm-none-eabi/include/stdio.h"
+ARM GAS  /tmp/cc4F2IIo.s 			page 17
 
 
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 main.c
-     /tmp/cczj00CX.s:16     .text.MX_GPIO_Init:0000000000000000 $t
-     /tmp/cczj00CX.s:22     .text.MX_GPIO_Init:0000000000000000 MX_GPIO_Init
-     /tmp/cczj00CX.s:88     .text.MX_GPIO_Init:0000000000000054 $d
-     /tmp/cczj00CX.s:94     .text.HAL_UART_RxCpltCallback:0000000000000000 $t
-     /tmp/cczj00CX.s:101    .text.HAL_UART_RxCpltCallback:0000000000000000 HAL_UART_RxCpltCallback
-     /tmp/cczj00CX.s:126    .text.HAL_UART_RxCpltCallback:0000000000000014 $d
-     /tmp/cczj00CX.s:132    .text._Error_Handler:0000000000000000 $t
-     /tmp/cczj00CX.s:139    .text._Error_Handler:0000000000000000 _Error_Handler
-     /tmp/cczj00CX.s:191    .text._Error_Handler:0000000000000038 $d
+     /tmp/cc4F2IIo.s:16     .text.MX_GPIO_Init:0000000000000000 $t
+     /tmp/cc4F2IIo.s:22     .text.MX_GPIO_Init:0000000000000000 MX_GPIO_Init
+     /tmp/cc4F2IIo.s:88     .text.MX_GPIO_Init:0000000000000054 $d
+     /tmp/cc4F2IIo.s:94     .text._Error_Handler:0000000000000000 $t
+     /tmp/cc4F2IIo.s:101    .text._Error_Handler:0000000000000000 _Error_Handler
+     /tmp/cc4F2IIo.s:148    .text._Error_Handler:0000000000000034 $d
                             *COM*:0000000000000064 buffbuff
-                            *COM*:0000000000000040 UartHandle
-     /tmp/cczj00CX.s:198    .text.MX_USART1_UART_Init:0000000000000000 $t
-     /tmp/cczj00CX.s:204    .text.MX_USART1_UART_Init:0000000000000000 MX_USART1_UART_Init
-     /tmp/cczj00CX.s:253    .text.MX_USART1_UART_Init:0000000000000030 $d
-     /tmp/cczj00CX.s:260    .text.SystemClock_Config:0000000000000000 $t
-     /tmp/cczj00CX.s:267    .text.SystemClock_Config:0000000000000000 SystemClock_Config
-     /tmp/cczj00CX.s:360    .text.SystemClock_Config:0000000000000070 $d
-     /tmp/cczj00CX.s:366    .text.toggleLED:0000000000000000 $t
-     /tmp/cczj00CX.s:373    .text.toggleLED:0000000000000000 toggleLED
-     /tmp/cczj00CX.s:393    .text.toggleLED:0000000000000010 $d
-     /tmp/cczj00CX.s:398    .text.main:0000000000000000 $t
-     /tmp/cczj00CX.s:405    .text.main:0000000000000000 main
-     /tmp/cczj00CX.s:501    .text.main:0000000000000088 $d
+                            *COM*:0000000000000040 huart1
+     /tmp/cc4F2IIo.s:156    .text.MX_USART1_UART_Init:0000000000000000 $t
+     /tmp/cc4F2IIo.s:162    .text.MX_USART1_UART_Init:0000000000000000 MX_USART1_UART_Init
+     /tmp/cc4F2IIo.s:208    .text.MX_USART1_UART_Init:0000000000000030 $d
+     /tmp/cc4F2IIo.s:215    .text.SystemClock_Config:0000000000000000 $t
+     /tmp/cc4F2IIo.s:222    .text.SystemClock_Config:0000000000000000 SystemClock_Config
+     /tmp/cc4F2IIo.s:311    .text.SystemClock_Config:000000000000006c $d
+     /tmp/cc4F2IIo.s:317    .text.main:0000000000000000 $t
+     /tmp/cc4F2IIo.s:324    .text.main:0000000000000000 main
+     /tmp/cc4F2IIo.s:421    .text.main:000000000000008c $d
+                            *COM*:0000000000000005 bufferRx
+                            *COM*:0000000000000032 action
+                            *COM*:0000000000000032 commBuff
+     /tmp/cc4F2IIo.s:434    .text.USART1_IRQHandler:0000000000000000 $t
+     /tmp/cc4F2IIo.s:441    .text.USART1_IRQHandler:0000000000000000 USART1_IRQHandler
+     /tmp/cc4F2IIo.s:515    .text.USART1_IRQHandler:000000000000005c $d
+     /tmp/cc4F2IIo.s:544    .bss.commBuff_index:0000000000000000 commBuff_index
+     /tmp/cc4F2IIo.s:551    .data.prompt:0000000000000000 prompt
                             *COM*:000000000000000a aRxBuffer
-     /tmp/cczj00CX.s:519    .bss.UartReady:0000000000000000 UartReady
-     /tmp/cczj00CX.s:520    .bss.UartReady:0000000000000000 $d
-     /tmp/cczj00CX.s:522    .rodata.MX_USART1_UART_Init.str1.4:0000000000000000 $d
-     /tmp/cczj00CX.s:526    .rodata._Error_Handler.str1.4:0000000000000000 $d
-     /tmp/cczj00CX.s:530    .rodata.main.str1.4:0000000000000000 $d
+     /tmp/cc4F2IIo.s:537    .bss.UartReady:0000000000000000 UartReady
+                            *COM*:0000000000000040 UartHandle
+     /tmp/cc4F2IIo.s:538    .bss.UartReady:0000000000000000 $d
+     /tmp/cc4F2IIo.s:540    .bss.commBuff_index:0000000000000000 $d
+     /tmp/cc4F2IIo.s:547    .data.prompt:0000000000000000 $d
+     /tmp/cc4F2IIo.s:554    .rodata.MX_USART1_UART_Init.str1.4:0000000000000000 $d
+     /tmp/cc4F2IIo.s:558    .rodata._Error_Handler.str1.4:0000000000000000 $d
+     /tmp/cc4F2IIo.s:562    .rodata.main.str1.4:0000000000000000 $d
                      .debug_frame:0000000000000010 $d
 
 UNDEFINED SYMBOLS
@@ -842,7 +1002,8 @@ HAL_RCC_GetHCLKFreq
 HAL_SYSTICK_Config
 HAL_SYSTICK_CLKSourceConfig
 HAL_NVIC_SetPriority
-HAL_GPIO_TogglePin
 HAL_Init
-HAL_UART_MspInit
+HAL_UART_Transmit_IT
 HAL_UART_Receive_IT
+sprintf
+HAL_UART_IRQHandler

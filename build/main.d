@@ -1,4 +1,5 @@
-build/main.d: Src/main.c Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h \
+build/main.d: Src/main.c Inc/main.h \
+ Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h \
  Inc/stm32f1xx_hal_conf.h Inc/main.h \
  Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h \
  Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h \
@@ -16,8 +17,9 @@ build/main.d: Src/main.c Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h \
  Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash.h \
  Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash_ex.h \
  Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h \
- Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h Inc/stm32f1xx_it.h \
- Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_usart.h
+ Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h
+
+Inc/main.h:
 
 Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:
 
@@ -62,7 +64,3 @@ Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash_ex.h:
 Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h:
 
 Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:
-
-Inc/stm32f1xx_it.h:
-
-Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_usart.h:

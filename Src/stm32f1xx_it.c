@@ -34,12 +34,19 @@
 #include "stm32f1xx_hal.h"
 #include "stm32f1xx.h"
 #include "stm32f1xx_it.h"
+#include <stdio.h>
+#include <string.h>
 
 /* USER CODE BEGIN 0 */
-
+extern uint8_t bufferRx[5];
+extern __IO ITStatus UartReady;
+extern char commBuff[50];
+extern int commBuff_index;
+//char action[60];
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
+extern UART_HandleTypeDef huart1;
 
 /******************************************************************************/
 /*            Cortex-M3 Processor Interruption and Exception Handlers         */ 
@@ -182,6 +189,39 @@ void SysTick_Handler(void)
 /* For the available peripheral interrupt handler names,                      */
 /* please refer to the startup file (startup_stm32f1xx.s).                    */
 /******************************************************************************/
+
+/**
+* @brief This function handles USART1 global interrupt.
+*/
+/* moved
+void USART1_IRQHandler(void)
+{
+  // USER CODE BEGIN USART1_IRQn 0
+
+  // USER CODE END USART1_IRQn 0
+  HAL_UART_IRQHandler(&huart1);
+  // USER CODE BEGIN USART1_IRQn 1 
+  // get char from UART...
+  HAL_UART_Receive_IT(&huart1, bufferRx, 1);
+  // write the bytes to our Command buffer
+  commBuff[commBuff_index] = bufferRx[0];
+  if (bufferRx[0] == '\r' || bufferRx[0] == '\n')
+  {
+      UartReady = SET;
+      HAL_UART_Transmit(&huart1, (uint8_t*)commBuff, 50, 100);
+      bufferRx[0] = '\0';
+      commBuff_index = 0;
+  }
+  // use normal transmit (not transmit_IT) so we don't 
+  // get duplicates in the buffer
+  // TODO - stop using this dirty hack...
+  HAL_UART_Transmit(&huart1, bufferRx, 5,100);
+  commBuff_index++;
+  //memset(bufferRx, 0, 5);
+  //bufferRx[0] = '\0';
+
+  //USER CODE END USART1_IRQn 1 
+}*/
 
 /* USER CODE BEGIN 1 */
 
