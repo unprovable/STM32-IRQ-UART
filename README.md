@@ -1,6 +1,6 @@
 # WE KNOW WHAT THE F*CK WAS WRONG!!
 
-Going to go through and add the phrase 'Magic pixie dust' to the places where you needed to do stuff... that way a `grep -A 4 Magic\ pixie\ dust` will locate the important stuff to get UART working with IRQ's. 
+Going to go through and add the phrase 'Magic pixie dust' to the places where you needed to do stuff... that way a `grep -R -A 4 'Magic\ pixie\ dust'` will locate the important stuff to get UART working with IRQ's. 
 
 __PS__ - NVIC needs to be better defined to stop manufacturer HAL's b0rking this stuff... it should **not** be this hard!!
  
