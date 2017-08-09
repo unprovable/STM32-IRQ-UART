@@ -69,6 +69,7 @@ char buffbuff[100];
 uint8_t bufferRx[5];
 char prompt[5] = "\r\n>>>";
 int commBuff_index=0;
+int sent_index=0;
 
 
 /* USER CODE BEGIN PFP */
@@ -269,6 +270,7 @@ void USART1_IRQHandler(void)
   {
       UartReady = SET;
       HAL_UART_Transmit(&huart1, (uint8_t*)commBuff, 50, 100);
+      sent_index=commBuff_index;
       bufferRx[0] = '\0';
       commBuff_index = 0;
   }
